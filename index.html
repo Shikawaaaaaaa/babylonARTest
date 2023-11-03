@@ -103,9 +103,10 @@
             shinyLineSphereParticleSource.position = new BABYLON.Vector3(0, 0, 0);
             shinyLineSphereParticleSystem.emitter = shinyLineSphereParticleSource;
         
-            const xr = await scene.createDefaultXRExperienceAsync({
+            scene.createDefaultXRExperienceAsync({
                 uiOptions: {
-                    sessionMode: 'immersive-ar'
+                    sessionMode: "immersive-ar",
+                    referenceSpaceType: "local-floor"
                 }
             });
         
