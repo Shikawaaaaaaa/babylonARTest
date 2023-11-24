@@ -75,6 +75,7 @@
             document.querySelector('a-camera').setAttribute('active', 'true');
 });
         var countdownNum = 3;
+        var countdownStarted = false;
         var countdownDiv = document.createElement('div');
         countdownDiv.style.position = 'fixed';
         countdownDiv.style.width = '100%';
@@ -94,27 +95,36 @@
         });
 
         document.body.addEventListener('click', function () {
-            if (countdownNum === 0) {
-                //TODO: Start Capture
-                countdownDiv.style.display = 'none';
-                document.getElementById('start-text').style.display = 'none';
-
-                // Add this code to capture the current AR view
-                let canvas = document.querySelector('a-scene').components.screenshot.getCanvas('perspective');
-                let img = document.createElement('img');
-                img.src = canvas.toDataURL();
-                document.body.appendChild(img);
-            } else {
+            countdownDiv.style.display = 'block'; 
+            if (!countdownStarted) {
+                countdownStarted = true;
                 countdownDiv.textContent = countdownNum;
                 countdownDiv.style.display = 'block';
-                countdownNum -= 1;
 
-                if (countdownNum === 0) {
-                    countdownDiv.textContent = "Now Capturing!";
-                    //After 1 sec, hide countdownDiv
-                    setTimeout(function () { countdownDiv.style.display = 'none'; }, 1000);
-                }
+                var countdown = setInterval(function () {
+                    countdownNum--;
+                    if (countdownNum <= 0) {
+                        clearInterval(countdown);
+                        countdownDiv.textContent = "Now Capturing!";
+                        setTimeout(function () { captureImage(); }, 1000);
+                    }
+                    else {
+                        countdownDiv.textContent = countdownNum;
+                    }
+                }, 1000);
             }
-        });</script>
+        });
+
+        function captureImage() {
+            //TODO: Start Capture
+            countdownDiv.style.display = 'none';
+            document.getElementById('start-text').style.display = 'none';
+
+            // Add this code to capture the current AR view
+            let canvas = document.querySelector('a-scene').components.screenshot.getCanvas('perspective');
+            let img = document.createElement('img');
+            img.src = canvas.toDataURL();
+            document.body.appendChild(img);
+        }</script>
 </body>
 </html>
