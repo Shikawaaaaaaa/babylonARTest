@@ -77,6 +77,7 @@
         var countdownNum = 3;
         var countdownStarted = false;
         var countdownDiv = document.createElement('div');
+        countdownDiv.style.position = 'absolute';
         countdownDiv.style.position = 'fixed';
         countdownDiv.style.width = '100%';
         countdownDiv.style.height = '100%';
@@ -85,6 +86,8 @@
         countdownDiv.style.display = 'flex';
         countdownDiv.style.justifyContent = 'center';
         countdownDiv.style.alignItems = 'center';
+        countdownDiv.style.zIndex = '9999';
+        countdownDiv.style.background = 'rgba(0,0,0,0.5)';
         countdownDiv.style.display = 'none';
         document.body.appendChild(countdownDiv);
 
