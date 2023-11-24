@@ -71,9 +71,9 @@
         画面をタップするとカウントダウン開始
     </div>
     <div id="countdown"></div>
-    <div id="capture-result" style="display: none;">
-        <img id="captured-image" style="width: 100%; height: auto;">
-        <div id="save-text">スクリーンショットで保存</div>
+    <div id="capture-result" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none;">
+        <img id="captured-image" style="object-fit: contain; width: 100%; height: 100%;">
+        <div id="save-text" style="position: fixed; bottom: 20px; width: 100%; text-align: center; color: white; font-size: 1.5em;">スクリーンショットで保存</div>
     </div>
     <a-scene screenshot mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
         <a-assets>
@@ -89,6 +89,12 @@
         </a-entity>
     </a-scene>
     <script>
+        document.getElementById('start').addEventListener('click', function () {
+            document.getElementById('modal').style.display = 'none';
+            document.querySelector('a-camera').setAttribute('active', 'true');
+            document.getElementById('start-text').style.display = 'block';
+            startTextDiv.style.display = 'block';
+        });
         var countdownNum = 3;
         var countdownStarted = false;
         var countdownDiv = document.createElement('div');
@@ -111,13 +117,6 @@
         var startTextDiv = document.getElementById('start-text');
         var saveTextDiv = document.getElementById('save-text');
         // 修正: テキストが表示される要素を取得
-
-        document.getElementById('start').addEventListener('click', function () {
-            document.getElementById('modal').style.display = 'none';
-            document.querySelector('a-camera').setAttribute('active', 'true');
-            document.getElementById('start-text').style.display = 'block';
-            startTextDiv.style.display = 'block';
-        });
 
         document.body.addEventListener('click', function () {
             countdownDiv.style.display = 'none'; // 修正: テキストを表示するように変更
@@ -149,18 +148,16 @@
             setTimeout(function () {
                 // キャプチャ開始
                 let canvas = document.querySelector('a-scene').components.screenshot.getCanvas('perspective');
-                let img = document.createElement('img');
-
-                // 画像生成とそれをページに表示
-                img.src = canvas.toDataURL();
-                document.body.appendChild(img);
 
                 // キャプチャ結果エリアを表示
-                captureResultDiv.style.display = 'flex';
-                capturedImage.src = img.src;
+                captureResultDiv.style.display = 'block';
+                capturedImage.src = canvas.toDataURL();
 
                 // 保存用テキストを表示
                 saveTextDiv.style.display = 'block';
+
+                // a-scene 非表示
+                document.querySelector('a-scene').style.display = 'none';
             }, 200); // 0.2秒遅延の時間を指定する
         }
 </script>
