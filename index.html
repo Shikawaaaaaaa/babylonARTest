@@ -70,10 +70,13 @@
             <a-gltf-model rotation="0 -0 0" position="0 1.0 -0.5" scale="0.35 0.35 0.35" src="#hatModel" visible="true"></a-gltf-model>
         </a-entity>
     </a-scene>
-    <script>document.getElementById('start').addEventListener('click', function () {
+    <script>
+        document.getElementById('start').addEventListener('click', function () {
             document.getElementById('modal').style.display = 'none';
             document.querySelector('a-camera').setAttribute('active', 'true');
-});
+            document.getElementById('start-text').style.display = 'block';
+        });
+
         var countdownNum = 3;
         var countdownStarted = false;
         var countdownDiv = document.createElement('div');
@@ -88,14 +91,7 @@
         countdownDiv.style.alignItems = 'center';
         countdownDiv.style.zIndex = '9999';
         countdownDiv.style.background = 'rgba(0,0,0,0.5)';
-        countdownDiv.style.display = 'none';
         document.body.appendChild(countdownDiv);
-
-        document.getElementById('start').addEventListener('click', function () {
-            document.getElementById('modal').style.display = 'none';
-            document.querySelector('a-camera').setAttribute('active', 'true');
-            document.getElementById('start-text').style.display = 'block';
-        });
 
         document.body.addEventListener('click', function () {
             countdownDiv.style.display = 'block'; 
