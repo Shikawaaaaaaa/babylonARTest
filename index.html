@@ -3,16 +3,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-face-aframe.prod.js"></script>
+
+    <!-- GoogleのMaterial Iconsをリンクとして追加 -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Google Fontsをリンクとして追加 -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap">
+
+    <style>
+        html, body {
+            font-family: 'Caveat', cursive; /* Google Fontsを適用 */
+            color: #555;
+        }
+
+        button {
+            font-family: 'Caveat', cursive; /* Google Fontsを適用 */
+            letter-spacing: 1px;
+            color: white;
+            background-color: #FF4081;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            max-width: 200px;
+            margin: 10px 0;
+            cursor: pointer;
+            outline: none;
+        }
+    </style>
 </head>
 <body>
-    <div id="modal" style="position: fixed; width: 70%; height: 70%; background: white; z-index: 999; border-radius: 25px; display: flex; align-items: center; justify-content: center; flex-direction: column; margin: auto; left: 0; right: 0; top: 0; bottom: 0;">
-        <p>注意書きのテキスト</p>
+    <div id="modal" style="position: fixed; width: 70%; height: 70%; background: white; z-index: 999; border-radius: 25px; display: flex; align-items: center; justify-content: space-evenly; flex-direction: column; margin: auto; left: 0; right: 0; top: 0; bottom: 0;">
+        <p><span class="material-icons" style="vertical-align: middle;">warning</span> AR撮影中は周囲に気をつけて、安全な場所で行いましょう。</p>
+        <p><span class="material-icons" style="vertical-align: middle;">camera</span> インカメラを使用して、顔にARエフェクトが表示されます。</p>
+        <p><span class="material-icons" style="vertical-align: middle;">lock</span> カメラのデータは保存されません。</p>
+
         <button id="start">開始</button>
     </div>
-    <a-scene mindar-face embedded vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+        <a-assets>
+            <a-asset-item id="headModel" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/sparkar/headOccluder.glb"></a-asset-item>
+            <a-asset-item id="hatModel" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/hat/scene.gltf"></a-asset-item>
+        </a-assets>
         <a-camera active="false" position="0 0 0"></a-camera>
-        <a-entity mindar-face-target="anchorIndex: 1">
-            <a-sphere color="green" radius="0.1"></a-sphere>
+        <a-entity mindar-face-target="anchorIndex: 168">
+            <a-gltf-model mindar-face-occluder position="0 -0.3 0.15" rotation="0 0 0" scale="0.065 0.065 0.065" src="#headModel"></a-gltf-model>
+        </a-entity>
+        <a-entity mindar-face-target="anchorIndex: 10">
+            <a-gltf-model rotation="0 -0 0" position="0 1.0 -0.5" scale="0.35 0.35 0.35" src="#hatModel" visible="true"></a-gltf-model>
         </a-entity>
     </a-scene>
     <script>document.getElementById('start').addEventListener('click', function () {
