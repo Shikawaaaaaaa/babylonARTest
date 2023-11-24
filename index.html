@@ -3,69 +3,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-face-aframe.prod.js"></script>
-    <style>
-        body {
-            margin: 0;
-        }
-
-        .example-container {
-            overflow: hidden;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            visibility: hidden;
-        }
-
-        .modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-        }
-
-            .modal button {
-                display: block;
-                margin-top: 20px;
-                padding: 10px;
-                background: #4086F4;
-                color: #fff;
-                border: none;
-                border-radius: 5px;
-            }
-    </style>
 </head>
 <body>
-    <div id="modal" class="modal">
-        <h2>AR体験の注意書き</h2>
-        <p>以下の注意事項をご確認の上、「開始」ボタンを押してAR体験を開始してください。</p>
-        <!-- 注意書きをここに記述 -->
+    <div id="modal" style="position: fixed; width: 70%; height: 70%; background: white; z-index: 999; border-radius: 25px; display: flex; align-items: center; justify-content: center; flex-direction: column; margin: auto; left: 0; right: 0; top: 0; bottom: 0;">
+        <p>注意書きのテキスト</p>
         <button id="start">開始</button>
     </div>
-    <div id="scene" class="example-container">
-        <a-scene mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-            <a-assets>
-                <a-asset-item id="headModel" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/sparkar/headOccluder.glb"></a-asset-item>
-                <a-asset-item id="hatModel" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/hat/scene.gltf"></a-asset-item>
-            </a-assets>
-            <a-camera active="false" position="0 0 0"></a-camera>
-            <a-entity mindar-face-target="anchorIndex: 168">
-                <a-gltf-model mindar-face-occluder position="0 -0.3 0.15" rotation="0 0 0" scale="0.065 0.065 0.065" src="#headModel"></a-gltf-model>
-            </a-entity>
-            <a-entity mindar-face-target="anchorIndex: 10">
-                <a-gltf-model rotation="0 -0 0" position="0 1.0 -0.5" scale="0.35 0.35 0.35" src="#hatModel" visible="true"></a-gltf-model>
-            </a-entity>
-        </a-scene>
-    </div>
-    <script>window.onload = function () {
-            const modal = document.getElementById('modal');
-            const scene = document.getElementById('scene');
-            document.getElementById('start').addEventListener('click', () => {
-                modal.style.visibility = 'hidden';
-                scene.style.visibility = 'visible';
-            });
-        };</script>
+    <a-scene mindar-face embedded vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+        <a-camera active="false" position="0 0 0"></a-camera>
+        <a-entity mindar-face-target="anchorIndex: 1">
+            <a-sphere color="green" radius="0.1"></a-sphere>
+        </a-entity>
+    </a-scene>
+    <script>document.getElementById('start').addEventListener('click', function () {
+            document.getElementById('modal').style.display = 'none';
+            document.querySelector('a-camera').setAttribute('active', 'true');
+        });</script>
 </body>
 </html>
