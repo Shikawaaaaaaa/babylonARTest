@@ -3,47 +3,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-face-aframe.prod.js"></script>
+    <script src="https://rawgit.com/nelsonsilva/aframe-screenshot-component/master/dist/aframe-screenshot-component.min.js"></script>
+    <a-scene screenshot mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
 
-    <!-- GoogleのMaterial Iconsをリンクとして追加 -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- GoogleのMaterial Iconsをリンクとして追加 -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <!-- Google Fontsをリンクとして追加 -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap">
+        <!-- Google Fontsをリンクとして追加 -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap">
 
-    <style>
-        html, body {
-            font-family: 'Arial', sans-serif; /* New Font */
-            color: #555;
-        }
+        <style>
+            html, body {
+                font-family: 'Arial', sans-serif; /* New Font */
+                color: #555;
+            }
 
-        button {
-            font-family: 'Arial', sans-serif; /* New Font */
-            letter-spacing: 1px;
-            color: white;
-            background-color: #FF4081;
-            border: none;
-            border-radius: 30px;
-            padding: 10px 20px;
-            max-width: 200px;
-            margin: 10px 0;
-            cursor: pointer;
-            outline: none;
-        }
+            button {
+                font-family: 'Arial', sans-serif; /* New Font */
+                letter-spacing: 1px;
+                color: white;
+                background-color: #FF4081;
+                border: none;
+                border-radius: 30px;
+                padding: 10px 20px;
+                max-width: 200px;
+                margin: 10px 0;
+                cursor: pointer;
+                outline: none;
+            }
 
-        #modal {
-            padding: 20px; /* Additional Padding */
-        }
+            #modal {
+                padding: 20px; /* Additional Padding */
+            }
 
-        #start-text {
-            position: fixed;
-            width: 100%;
-            bottom: 20px;
-            text-align: center;
-            color: white;
-            font-size: 1.5em;
-            display: none;
-        }
-    </style>
+            #start-text {
+                position: fixed;
+                width: 100%;
+                bottom: 20px;
+                text-align: center;
+                color: white;
+                font-size: 1.5em;
+                display: none;
+            }
+        </style>
 </head>
 <body>
     <div id="modal" style="position: fixed; width: 70%; height: 70%; background: #ffd1dd; z-index: 999; border-radius: 25px; display: flex; align-items: center; justify-content: space-evenly; flex-direction: column; margin: auto; left: 0; right: 0; top: 0; bottom: 0;">
@@ -97,6 +99,12 @@
                 //TODO: Start Capture
                 countdownDiv.style.display = 'none';
                 document.getElementById('start-text').style.display = 'none';
+
+                // Add this code to capture the current AR view
+                let canvas = document.querySelector('a-scene').components.screenshot.getCanvas('perspective');
+                let img = document.createElement('img');
+                img.src = canvas.toDataURL();
+                document.body.appendChild(img);
             } else {
                 countdownDiv.textContent = countdownNum;
                 countdownDiv.style.display = 'block';
