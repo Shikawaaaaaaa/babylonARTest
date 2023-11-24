@@ -12,12 +12,12 @@
 
     <style>
         html, body {
-            font-family: 'Caveat', cursive; /* Google Fontsを適用 */
+            font-family: 'Arial', sans-serif; /* New Font */
             color: #555;
         }
 
         button {
-            font-family: 'Caveat', cursive; /* Google Fontsを適用 */
+            font-family: 'Arial', sans-serif; /* New Font */
             letter-spacing: 1px;
             color: white;
             background-color: #FF4081;
@@ -29,13 +29,17 @@
             cursor: pointer;
             outline: none;
         }
+
+        #modal {
+            padding: 20px; /* Additional Padding */
+        }
     </style>
 </head>
 <body>
-    <div id="modal" style="position: fixed; width: 70%; height: 70%; background: white; z-index: 999; border-radius: 25px; display: flex; align-items: center; justify-content: space-evenly; flex-direction: column; margin: auto; left: 0; right: 0; top: 0; bottom: 0;">
-        <p><span class="material-icons" style="vertical-align: middle;">warning</span> AR撮影中は周囲に気をつけて、安全な場所で行いましょう。</p>
-        <p><span class="material-icons" style="vertical-align: middle;">camera</span> インカメラを使用して、顔にARエフェクトが表示されます。</p>
-        <p><span class="material-icons" style="vertical-align: middle;">lock</span> カメラのデータは保存されません。</p>
+    <div id="modal" style="position: fixed; width: 70%; height: 70%; background: #ffd1dd; z-index: 999; border-radius: 25px; display: flex; align-items: center; justify-content: space-evenly; flex-direction: column; margin: auto; left: 0; right: 0; top: 0; bottom: 0;">
+        <p><span class="material-icons" style="vertical-align: middle; margin-right: 10px;">warning</span> AR撮影中は周囲に気をつけて、安全な場所で行いましょう。</p>
+        <p><span class="material-icons" style="vertical-align: middle; margin-right: 10px;">camera</span> インカメラを使用して、顔にARエフェクトが表示されます。</p>
+        <p><span class="material-icons" style="vertical-align: middle; margin-right: 10px;">lock</span> カメラのデータは保存されません。</p>
 
         <button id="start">開始</button>
     </div>
