@@ -59,7 +59,7 @@
             }
 
             #capture-result img {
-            object-fit: cover; /* 画像を画面全体にフィットさせる */
+            object-fit: contain; /* 画像を画面全体にフィットさせる */
             width: 100%;
             height: 100%;
             }
@@ -160,24 +160,31 @@
         });
 
         function captureImage() {
-            // 0.2秒遅延する
             setTimeout(function () {
-                // キャプチャ開始
                 let canvas = document.querySelector('a-scene').components.screenshot.getCanvas('perspective');
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
 
+                let dataURL = canvas.toDataURL();
+
+                // 画像がロードされたことを確認する
+                capturedImage.onload = function() {
+                    console.log("Image loaded successfully.");
+                    // ここで必要な処理を行う
+                };
+
                 // キャプチャ結果エリアを表示
                 captureResultDiv.style.display = 'block';
-                capturedImage.src = canvas.toDataURL();
+                capturedImage.src = dataURL;
 
                 // 保存用テキストを表示
                 saveTextDiv.style.display = 'block';
 
-                // a-sceneを非表示にする（AR演出を非表示にする）
+                // a-sceneを非表示にする
                 document.querySelector('a-scene').style.display = 'none';
-            }, 200); // 0.2秒遅延の時間を指定する
-        }
+            }, 200);
+}
+
 </script>
 </body>
 </html>
