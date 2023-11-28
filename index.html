@@ -57,6 +57,12 @@
                 z-index: 9999;
                 pointer-events: none; /* Allow clicks to pass through */
             }
+
+            #capture-result img {
+            object-fit: cover; /* 画像を画面全体にフィットさせる */
+            width: 100%;
+            height: 100%;
+            }
         </style>
 </head>
 <body>
@@ -139,15 +145,27 @@
             }
         });
 
-        function captureImage() {
-            // 全てを非表示にする
-            countdownDiv.style.display = 'none';
-            startTextDiv.style.display = 'none';
+        document.addEventListener('DOMContentLoaded', function() {
+            var sceneEl = document.querySelector('a-scene');
 
+            // ビューポートのサイズを取得
+            var viewportWidth = window.innerWidth;
+            var viewportHeight = window.innerHeight;
+
+            // screenshotコンポーネントに解像度を設定
+            sceneEl.setAttribute('screenshot', {
+                width: viewportWidth,
+                height: viewportHeight
+            });
+        });
+
+        function captureImage() {
             // 0.2秒遅延する
             setTimeout(function () {
                 // キャプチャ開始
                 let canvas = document.querySelector('a-scene').components.screenshot.getCanvas('perspective');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
 
                 // キャプチャ結果エリアを表示
                 captureResultDiv.style.display = 'block';
@@ -156,7 +174,7 @@
                 // 保存用テキストを表示
                 saveTextDiv.style.display = 'block';
 
-                // a-scene 非表示
+                // a-sceneを非表示にする（AR演出を非表示にする）
                 document.querySelector('a-scene').style.display = 'none';
             }, 200); // 0.2秒遅延の時間を指定する
         }
