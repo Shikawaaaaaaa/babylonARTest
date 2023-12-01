@@ -217,29 +217,19 @@
         });
 
         function captureImage() {
-            setTimeout(function () {
-                let canvas = document.querySelector('a-scene').components.screenshot.getCanvas('perspective');
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
+            var video = document.querySelector('video');
+            var snap = takeSnapshot(video);
 
-                let dataURL = canvas.toDataURL();
+            // スナップショット表示
+            image.setAttribute('src', snap);
+            image.classList.add('visible');
 
-                // 画像がロードされたことを確認する
-                capturedImage.onload = function () {
-                    console.log("Image loaded successfully.");
-                    // ここで必要な処理を行う
-                };
+            // 削除ボタンと保存ボタン有効化
+            //delete_photo_btn.classList.remove("disabled");
+            //download_photo_btn.classList.remove("disabled");
 
-                // キャプチャ結果エリアを表示
-                captureResultDiv.style.display = 'block';
-                capturedImage.src = dataURL;
-
-                // 保存用テキストを表示
-                saveTextDiv.style.display = 'block';
-
-                // a-sceneを非表示にする
-                document.querySelector('a-scene').style.display = 'none';
-            }, 200);
+            // 保存ボタンにスナップショットを渡す
+            //download_photo_btn.href = snap;
         }
 
         var image = document.querySelector('#snap');
