@@ -23,6 +23,7 @@
                 padding: 10px 15px 30px;
                 text-align: center;
                 box-sizing: border-box;
+                display: none;
             }
 
                 .ui a {
@@ -182,11 +183,11 @@
         // 修正: テキストが表示される要素を取得
 
         document.body.addEventListener('click', function () {
-            countdownDiv.style.display = 'none'; // 修正: テキストを表示するように変更
+            countdownDiv.style.display = 'none'; 
             if (!countdownStarted && document.getElementById('start-text').style.display === 'block') {
                 countdownStarted = true;
                 countdownDiv.textContent = countdownNum;
-                countdownDiv.style.display = 'flex'; // 修正: テキストを表示するように変更
+                countdownDiv.style.display = 'flex';
 
                 var countdown = setInterval(function () {
                     countdownNum--;
