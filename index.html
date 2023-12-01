@@ -171,11 +171,36 @@
         <div id="progress-bar" style="position: fixed; bottom: 20px; width: 0%; height: 10px; background-color: green; display: none;"></div>
     </div>
 
-    <script>document.getElementById('start').addEventListener('click', function () {
-            document.getElementById('modal').style.display = 'none';
-            document.querySelector('a-camera').setAttribute('active', 'true');
-            document.getElementById('start-text').style.display = 'block';
-            startTextDiv.style.display = 'block';
+    <script>
+        // クエリパラメータを取得
+        function getQueryParam(param) {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // ドキュメントが読み込まれたときに実行
+        document.addEventListener('DOMContentLoaded', function () {
+            var id = getQueryParam("id");
+            var hatModelSrc;
+
+            // idの値に基づいてURLを選択
+            if (id === '1') {
+                hatModelSrc = "https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/hat/scene.gltf"; 
+            } else if (id === '2') {
+                hatModelSrc = "https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/hat2/scene.gltf"; 
+            }
+
+            // hatModelのsrc属性を更新
+            if (hatModelSrc) {
+                document.getElementById('hatModel').setAttribute('src', hatModelSrc);
+            }
+        });
+
+        document.getElementById('start').addEventListener('click', function () {
+        document.getElementById('modal').style.display = 'none';
+        document.querySelector('a-camera').setAttribute('active', 'true');
+        document.getElementById('start-text').style.display = 'block';
+        startTextDiv.style.display = 'block';
         });
         var countdownNum = 3;
         var countdownStarted = false;
