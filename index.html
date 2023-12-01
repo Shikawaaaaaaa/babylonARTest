@@ -48,14 +48,10 @@
             }
 
             #snap {
-                position: fixed; /* 画面全体に表示するために position を fixed に設定 */
-                top: 0;
-                left: 0;
-                width: 100vw; /* ビューポートの幅に合わせる */
-                height: 100vh; /* ビューポートの高さに合わせる */
-                object-fit: cover; /* 画像がコンテナにフィットするように設定 */
+                max-width: 100%;
+                height: auto;
                 display: block;
-                visibility: hidden; /* 初期状態では非表示 */
+                visibility: hidden;
             }
 
             .ui a.disabled {
