@@ -197,20 +197,17 @@
 
             var gltfModel = document.querySelector('a-gltf-model[mindar-face-occluder]');
 
-            // idの値に基づいて属性を設定
             switch (id) {
                 case '1':
-                    gltfModel.setAttribute('position', '0 -0.3 0.15');
-                    gltfModel.setAttribute('rotation', '0 0 0');
-                    gltfModel.setAttribute('scale', '0.065 0.065 0.065');
+                    gltfModel.setAttribute('position', '0 -0.2 -0.5');
+                    gltfModel.setAttribute('rotation', '0 -0 0');
+                    gltfModel.setAttribute('scale', '0.008 0.008 0.008'); 
                     break;
                 case '2':
-                    // idが2の場合の値を設定
                     gltfModel.setAttribute('position', '0 -0.2 -0.5'); 
                     gltfModel.setAttribute('rotation', '0 -0 0');
                     gltfModel.setAttribute('scale', '0.008 0.008 0.008'); 
                     break;
-                // 他のidの値に対するケースも追加可能
             }
         });
 
