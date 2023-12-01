@@ -23,37 +23,39 @@
                 padding: 10px 15px 30px;
                 text-align: center;
                 box-sizing: border-box;
-                display: none;
+            }
+            .ui a {
+                display: inline-block;
+                width: 60px;
+                height: 60px;
+                background-color: #ffffff;
+                line-height: 100%;
+                color: #303030;
+                margin: 10px 3px;
+                border-radius: 50%;
+                position: relative;
             }
 
-                .ui a {
-                    display: inline-block;
-                    width: 60px;
-                    height: 60px;
-                    background-color: #ffffff;
-                    line-height: 100%;
-                    color: #303030;
-                    margin: 10px 3px;
-                    border-radius: 50%;
-                    position: relative;
-                }
+            .ui a i {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+            }
 
-                    .ui a i {
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%,-50%);
-                    }
-
-                    .ui a:active {
-                        color: #ff0000;
-                    }
+            .ui a:active {
+                color: #ff0000;
+            }
 
             #snap {
-                max-width: 100%;
-                height: auto;
+                position: fixed; /* 画面全体に表示するために position を fixed に設定 */
+                top: 0;
+                left: 0;
+                width: 100vw; /* ビューポートの幅に合わせる */
+                height: 100vh; /* ビューポートの高さに合わせる */
+                object-fit: cover; /* 画像がコンテナにフィットするように設定 */
                 display: block;
-                visibility: hidden;
+                visibility: hidden; /* 初期状態では非表示 */
             }
 
             .ui a.disabled {
@@ -149,9 +151,6 @@
     </a-scene>
     <div class="ui">
         <img id="snap">
-        <a href="#" id="delete-photo" title="Delete Photo" class="disabled"><i class="material-icons">delete</i></a>
-        <a href="" id="take-photo" title="Take Photo"><i class="material-icons">photo_camera</i></a>
-        <a href="#" id="download-photo" download="selfie.png" title="Save Photo" class="disabled" target="_blank"><i class="material-icons">file_download</i></a>
     </div>
     <script>document.getElementById('start').addEventListener('click', function () {
             document.getElementById('modal').style.display = 'none';
@@ -180,7 +179,6 @@
         var capturedImage = document.getElementById('captured-image');
         var startTextDiv = document.getElementById('start-text');
         var saveTextDiv = document.getElementById('save-text');
-        // 修正: テキストが表示される要素を取得
 
         document.body.addEventListener('click', function () {
             countdownDiv.style.display = 'none'; 
@@ -193,7 +191,7 @@
                     countdownNum--;
                     if (countdownNum <= 0) {
                         clearInterval(countdown);
-                        countdownDiv.textContent = "Now Capturing!";
+                        countdownDiv.textContent = "";
                         setTimeout(function () { captureImage(); }, 1000);
                     }
                     else {
@@ -234,42 +232,6 @@
         }
 
         var image = document.querySelector('#snap');
-        var take_photo_btn = document.querySelector('#take-photo');
-        var delete_photo_btn = document.querySelector('#delete-photo');
-        var download_photo_btn = document.querySelector('#download-photo');
-
-        //スナップショットボタン
-        take_photo_btn.addEventListener("click", function (e) {
-            e.preventDefault();
-            var video = document.querySelector('video');
-            var snap = takeSnapshot(video);
-
-            //スナップショット表示.
-            image.setAttribute('src', snap);
-            image.classList.add('visible');
-
-            // 削除ボタンと保存ボタン有効
-            delete_photo_btn.classList.remove("disabled");
-            download_photo_btn.classList.remove("disabled");
-
-            // 保存ボタンにスナップショットを渡す
-            download_photo_btn.href = snap;
-        });
-
-        //削除ボタン
-        delete_photo_btn.addEventListener("click", function (e) {
-
-            e.preventDefault();
-
-            // スナップショットを隠す
-            image.setAttribute('src', "");
-            image.classList.remove("visible");
-
-            // 削除ボタンと保存ボタン無効
-            delete_photo_btn.classList.add("disabled");
-            download_photo_btn.classList.add("disabled");
-
-        });
 
         //スナップショットを撮る
         function takeSnapshot(video) {
