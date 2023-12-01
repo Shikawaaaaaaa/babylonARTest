@@ -118,6 +118,16 @@
             width: 100%;
             height: 100%;
             }
+
+            #progress-bar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 0%;
+                height: 10px;
+                background-color: green;
+                display: none; /* 初期状態では非表示 */
+            }
         </style>
 </head>
 <body>
@@ -152,6 +162,9 @@
     <div class="ui">
         <img id="snap">
     </div>
+    <div id="save-text" style="position: fixed; bottom: 50px; width: 100%; text-align: center; color: white; font-size: 1.5em;">スクリーンショットで保存</div>
+    <div id="progress-bar" style="position: fixed; bottom: 20px; width: 0%; height: 10px; background-color: green; display: none;"></div>
+
     <script>document.getElementById('start').addEventListener('click', function () {
             document.getElementById('modal').style.display = 'none';
             document.querySelector('a-camera').setAttribute('active', 'true');
@@ -181,7 +194,7 @@
         var saveTextDiv = document.getElementById('save-text');
 
         document.body.addEventListener('click', function () {
-            countdownDiv.style.display = 'none'; 
+            countdownDiv.style.display = 'none';
             if (!countdownStarted && document.getElementById('start-text').style.display === 'block') {
                 countdownStarted = true;
                 countdownDiv.textContent = countdownNum;
@@ -223,12 +236,16 @@
             image.setAttribute('src', snap);
             image.classList.add('visible');
 
-            // 削除ボタンと保存ボタン有効化
-            //delete_photo_btn.classList.remove("disabled");
-            //download_photo_btn.classList.remove("disabled");
-
-            // 保存ボタンにスナップショットを渡す
-            //download_photo_btn.href = snap;
+            // プログレスバーを表示し、30秒間で満タンになるように設定
+            var progressBar = document.getElementById('progress-bar');
+            progressBar.style.display = 'block';
+            var start = Date.now();
+            var interval = setInterval(function () {
+                var elapsed = Date.now() - start;
+                var progress = (elapsed / 30000) * 100;
+                progressBar.style.width = progress + '%';
+                if (progress >= 100) clearInterval(interval);
+            }, 1000);
         }
 
         var image = document.querySelector('#snap');
@@ -265,6 +282,6 @@
             }
         }
 
-        //--></script>
+            //--></script>
 </body>
 </html>
