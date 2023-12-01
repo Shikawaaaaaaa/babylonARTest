@@ -1,190 +1,155 @@
-<html>
+<!DOCTYPE html>
+<html lang="ja">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-face-aframe.prod.js"></script>
-    <script src="https://rawgit.com/nelsonsilva/aframe-screenshot-component/master/dist/aframe-screenshot-component.min.js"></script>
-
-        <!-- GoogleのMaterial Iconsをリンクとして追加 -->
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-        <!-- Google Fontsをリンクとして追加 -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap">
-
-        <style>
-            html, body {
-                font-family: 'Arial', sans-serif; /* New Font */
-                color: #555;
-            }
-
-            button {
-                font-family: 'Arial', sans-serif; /* New Font */
-                letter-spacing: 1px;
-                color: white;
-                background-color: #FF4081;
-                border: none;
-                border-radius: 30px;
-                padding: 10px 20px;
-                max-width: 200px;
-                margin: 10px 0;
-                cursor: pointer;
-                outline: none;
-            }
-
-            #modal {
-                padding: 20px; /* Additional Padding */
-            }
-
-            #start-text {
-                position: fixed;
-                width: 100%;
-                bottom: 20px;
-                text-align: center;
-                color: white;
-                font-size: 1.5em;
-                display: none;
-            }
-
-            #countdown {
-                position: fixed;
-                width: 100%;
-                height: 100%;
-                color: white;
-                font-size: 5em;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 9999;
-                pointer-events: none; /* Allow clicks to pass through */
-            }
-
-            #capture-result img {
-            object-fit: contain; /* 画像を画面全体にフィットさせる */
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>A-FrameとAR.js - スナップショットを撮る</title>
+    <!-- ① A-Frame を読み込む -->
+    <script src="//aframe.io/releases/0.8.0/aframe.min.js"></script>
+    <!-- ② AR.js を読み込む -->
+    <script src="//jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"></script>
+    <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .ui {
+            position: absolute;
+            z-index: 100;
+            bottom: 0;
+            left: 0;
             width: 100%;
-            height: 100%;
+            height: auto;
+            margin: 0;
+            padding: 10px 15px 30px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+            .ui a {
+                display: inline-block;
+                width: 60px;
+                height: 60px;
+                background-color: #ffffff;
+                line-height: 100%;
+                color: #303030;
+                margin: 10px 3px;
+                border-radius: 50%;
+                position: relative;
             }
-        </style>
+
+                .ui a i {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%,-50%);
+                }
+
+                .ui a:active {
+                    color: #ff0000;
+                }
+
+        #snap {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            visibility: hidden;
+        }
+
+        .ui a.disabled {
+            pointer-events: none;
+            color: #cccccc;
+        }
+
+        #snap.visible {
+            visibility: visible;
+        }
+    </style>
+
 </head>
-<body>
-    <div id="modal" style="position: fixed; width: 70%; height: 70%; background: #ffd1dd; z-index: 999; border-radius: 25px; display: flex; align-items: center; justify-content: space-evenly; flex-direction: column; margin: auto; left: 0; right: 0; top: 0; bottom: 0;">
-        <p><span class="material-icons" style="vertical-align: middle; margin-right: 10px;">warning</span> AR撮影中は周囲に気をつけて、安全な場所で行いましょう。</p>
-        <p><span class="material-icons" style="vertical-align: middle; margin-right: 10px;">camera</span> インカメラを使用して、顔にARエフェクトが表示されます。</p>
-        <p><span class="material-icons" style="vertical-align: middle; margin-right: 10px;">lock</span> カメラのデータは保存されません。</p>
 
-        <button id="start">開始</button>
-    </div>
-    <div id="start-text">
-        画面をタップするとカウントダウン開始
-    </div>
-    <div id="countdown"></div>
-    <div id="capture-result" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none;">
-        <img id="captured-image" style="object-fit: contain; width: 100%; height: 100%;">
-        <div id="save-text" style="position: fixed; bottom: 20px; width: 100%; text-align: center; color: white; font-size: 1.5em;">スクリーンショットで保存</div>
-    </div>
-    <a-scene screenshot mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-        <a-assets>
-            <a-asset-item id="headModel" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/sparkar/headOccluder.glb"></a-asset-item>
-            <a-asset-item id="hatModel" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/hat/scene.gltf"></a-asset-item>
-        </a-assets>
-        <a-camera active="false" position="0 0 0"></a-camera>
-        <a-entity mindar-face-target="anchorIndex: 168">
-            <a-gltf-model mindar-face-occluder position="0 -0.3 0.15" rotation="0 0 0" scale="0.065 0.065 0.065" src="#headModel"></a-gltf-model>
-        </a-entity>
-        <a-entity mindar-face-target="anchorIndex: 10">
-            <a-gltf-model rotation="0 -0 0" position="0 1.0 -0.5" scale="0.35 0.35 0.35" src="#hatModel" visible="true"></a-gltf-model>
-        </a-entity>
+<body style='margin: 0; overflow: hidden;'>
+    <!-- ③ シーンを追加 -->
+    <a-scene embedded arjs='debugUIEnabled:false;trackingMethod: best;' vr-mode-ui="enabled: false">
+        <a-marker preset='hiro'>
+            <a-box position="0 0.5 0" wireframe="true"></a-box>
+        </a-marker>
+
+        <!-- ⑥ カメラを追加 -->
+        <a-entity camera></a-entity>
     </a-scene>
-    <script>
-        document.getElementById('start').addEventListener('click', function () {
-            document.getElementById('modal').style.display = 'none';
-            document.querySelector('a-camera').setAttribute('active', 'true');
-            document.getElementById('start-text').style.display = 'block';
-            startTextDiv.style.display = 'block';
-        });
-        var countdownNum = 3;
-        var countdownStarted = false;
-        var countdownDiv = document.createElement('div');
-        countdownDiv.style.position = 'absolute';
-        countdownDiv.style.position = 'fixed';
-        countdownDiv.style.width = '100%';
-        countdownDiv.style.height = '100%';
-        countdownDiv.style.color = 'white';
-        countdownDiv.style.fontSize = '5em';
-        //countdownDiv.style.display = 'flex';
-        countdownDiv.style.justifyContent = 'center';
-        countdownDiv.style.alignItems = 'center';
-        countdownDiv.style.zIndex = '9999';
-        countdownDiv.style.background = 'rgba(0,0,0,0.5)';
-        document.body.appendChild(countdownDiv);
-
-        var countdownDiv = document.getElementById('countdown');
-        var captureResultDiv = document.getElementById('capture-result');
-        var capturedImage = document.getElementById('captured-image');
-        var startTextDiv = document.getElementById('start-text');
-        var saveTextDiv = document.getElementById('save-text');
-        // 修正: テキストが表示される要素を取得
-
-        document.body.addEventListener('click', function () {
-            countdownDiv.style.display = 'none'; // 修正: テキストを表示するように変更
-            if (!countdownStarted && document.getElementById('start-text').style.display === 'block') {
-                countdownStarted = true;
-                countdownDiv.textContent = countdownNum;
-                countdownDiv.style.display = 'flex'; // 修正: テキストを表示するように変更
-
-                var countdown = setInterval(function () {
-                    countdownNum--;
-                    if (countdownNum <= 0) {
-                        clearInterval(countdown);
-                        countdownDiv.textContent = "Now Capturing!";
-                        setTimeout(function () { captureImage(); }, 1000);
-                    }
-                    else {
-                        countdownDiv.textContent = countdownNum;
-                    }
-                }, 1000);
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            var sceneEl = document.querySelector('a-scene');
-
-            // ビューポートのサイズを取得
-            var viewportWidth = window.innerWidth;
-            var viewportHeight = window.innerHeight;
-
-            // screenshotコンポーネントに解像度を設定
-            sceneEl.setAttribute('screenshot', {
-                width: viewportWidth,
-                height: viewportHeight
-            });
-        });
-
-        function captureImage() {
-            setTimeout(function () {
-                let canvas = document.querySelector('a-scene').components.screenshot.getCanvas('perspective');
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-
-                let dataURL = canvas.toDataURL();
-
-                // 画像がロードされたことを確認する
-                capturedImage.onload = function() {
-                    console.log("Image loaded successfully.");
-                    // ここで必要な処理を行う
-                };
-
-                // キャプチャ結果エリアを表示
-                captureResultDiv.style.display = 'block';
-                capturedImage.src = dataURL;
-
-                // 保存用テキストを表示
-                saveTextDiv.style.display = 'block';
-
-                // a-sceneを非表示にする
-                document.querySelector('a-scene').style.display = 'none';
-            }, 200);
-}
-
-</script>
+    <div class="ui">
+        <img id="snap">
+        <a href="#" id="delete-photo" title="Delete Photo" class="disabled"><i class="material-icons">delete</i></a>
+        <a href="" id="take-photo" title="Take Photo"><i class="material-icons">photo_camera</i></a>
+        <a href="#" id="download-photo" download="selfie.png" title="Save Photo" class="disabled" target="_blank"><i class="material-icons">file_download</i></a>
+    </div>
 </body>
+<script>
+    var image = document.querySelector('#snap');
+    var take_photo_btn = document.querySelector('#take-photo');
+    var delete_photo_btn = document.querySelector('#delete-photo');
+    var download_photo_btn = document.querySelector('#download-photo');
+
+    //スナップショットボタン
+    take_photo_btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        var video = document.querySelector('video');
+        var snap = takeSnapshot(video);
+
+        //スナップショット表示.
+        image.setAttribute('src', snap);
+        image.classList.add('visible');
+
+        // 削除ボタンと保存ボタン有効
+        delete_photo_btn.classList.remove("disabled");
+        download_photo_btn.classList.remove("disabled");
+
+        // 保存ボタンにスナップショットを渡す
+        download_photo_btn.href = snap;
+    });
+
+    //削除ボタン
+    delete_photo_btn.addEventListener("click", function (e) {
+
+        e.preventDefault();
+
+        // スナップショットを隠す
+        image.setAttribute('src', "");
+        image.classList.remove("visible");
+
+        // 削除ボタンと保存ボタン無効
+        delete_photo_btn.classList.add("disabled");
+        download_photo_btn.classList.add("disabled");
+
+    });
+
+    //スナップショットを撮る
+    function takeSnapshot(video) {
+        var resizedCanvas = document.createElement("canvas");
+        var resizedContext = resizedCanvas.getContext("2d");
+        var width = video.videoWidth;
+        var height = video.videoHeight;
+        var aScene = document.querySelector("a-scene").components.screenshot.getCanvas("perspective");
+
+        if (width && height) {
+            //videoのサイズをキャンバスにセット
+            resizedCanvas.width = width;
+            resizedCanvas.height = height;
+            //キャンバスにvideoをコピー
+            resizedContext.drawImage(video, 0, 0, width, height);
+
+            //カメラの画角でar側の縮小処理を変える
+            if (width > height) {
+                // 横長（PC)
+                resizedContext.drawImage(aScene, 0, 0, width, height);
+            } else {
+                // 縦長（スマホ）
+                var scale = height / width;
+                var scaledWidth = height * scale;
+                var marginLeft = (width - scaledWidth) / 2;
+                resizedContext.drawImage(aScene, marginLeft, 0, scaledWidth, height);
+            }
+            return resizedCanvas.toDataURL('image/png');
+        }
+    }
+
+    </script>
 </html>
