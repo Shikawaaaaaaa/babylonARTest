@@ -56,6 +56,7 @@
                 object-fit: cover; /* 画像がコンテナにフィットするように設定 */
                 display: block;
                 visibility: hidden; /* 初期状態では非表示 */
+                z-index: 1;
             }
 
             .ui a.disabled {
@@ -65,6 +66,7 @@
 
             #snap.visible {
                 visibility: visible;
+                z-index: 10;
             }
 
             html, body {
@@ -114,9 +116,10 @@
             }
 
             #capture-result img {
-            object-fit: contain; /* 画像を画面全体にフィットさせる */
-            width: 100%;
-            height: 100%;
+                object-fit: contain; /* 画像を画面全体にフィットさせる */
+                width: 100%;
+                height: 100%;
+                z-index: 2;
             }
 
             #progress-bar {
@@ -124,9 +127,16 @@
                 bottom: 0;
                 left: 0;
                 width: 0%;
-                height: 10px;
+                height: 200px;
                 background-color: green;
                 display: none; /* 初期状態では非表示 */
+                z-index: 20;
+            }
+
+            #save-text {
+                /* 既存のスタイル */
+                z-index: 20; /* テキストの z-index をスナップショットより高く設定 */
+                display: none;
             }
         </style>
 </head>
@@ -139,13 +149,9 @@
         <button id="start">開始</button>
     </div>
     <div id="start-text">
-        画面をタップするとカウントダウン開始
+
     </div>
     <div id="countdown"></div>
-    <div id="capture-result" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none;">
-        <img id="captured-image" style="object-fit: contain; width: 100%; height: 100%;">
-        <div id="save-text" style="position: fixed; bottom: 20px; width: 100%; text-align: center; color: white; font-size: 1.5em;">スクリーンショットで保存</div>
-    </div>
     <a-scene screenshot mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
         <a-assets>
             <a-asset-item id="headModel" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/sparkar/headOccluder.glb"></a-asset-item>
@@ -161,9 +167,9 @@
     </a-scene>
     <div class="ui">
         <img id="snap">
+        <div id="save-text" style="position: fixed; bottom: 50px; width: 100%; text-align: center; color: white; font-size: 1.5em;">スクリーンショットで保存</div>
+        <div id="progress-bar" style="position: fixed; bottom: 20px; width: 0%; height: 10px; background-color: green; display: none;"></div>
     </div>
-    <div id="save-text" style="position: fixed; bottom: 50px; width: 100%; text-align: center; color: white; font-size: 1.5em;">スクリーンショットで保存</div>
-    <div id="progress-bar" style="position: fixed; bottom: 20px; width: 0%; height: 10px; background-color: green; display: none;"></div>
 
     <script>document.getElementById('start').addEventListener('click', function () {
             document.getElementById('modal').style.display = 'none';
@@ -236,16 +242,24 @@
             image.setAttribute('src', snap);
             image.classList.add('visible');
 
-            // プログレスバーを表示し、30秒間で満タンになるように設定
+            // 「スクリーンショットで保存」テキストとプログレスバーを表示
+            var saveTextDiv = document.getElementById('save-text');
             var progressBar = document.getElementById('progress-bar');
+            saveTextDiv.style.display = 'block';
             progressBar.style.display = 'block';
+            progressBar.style.width = '0%'; // プログレスバーの初期化
+
+            // 30秒間でプログレスバーを満タンにする
             var start = Date.now();
             var interval = setInterval(function () {
                 var elapsed = Date.now() - start;
-                var progress = (elapsed / 30000) * 100;
+                var progress = Math.min((elapsed / 10000) * 100, 100); // 進捗率を0%から100%の間に制限
                 progressBar.style.width = progress + '%';
-                if (progress >= 100) clearInterval(interval);
-            }, 1000);
+                if (progress >= 100) {
+                    clearInterval(interval); // 進捗率が100%に達したらタイマーを停止
+                    window.close(); // タブを閉じる
+                } // 進捗率が100%に達したらタイマーを停止
+            }, 100);
         }
 
         var image = document.querySelector('#snap');
@@ -282,6 +296,6 @@
             }
         }
 
-            //--></script>
+                //--></script>
 </body>
 </html>
