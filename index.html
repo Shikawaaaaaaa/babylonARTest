@@ -178,38 +178,45 @@
             return urlParams.get(param);
         }
 
-        // ドキュメントが読み込まれたときに実行
         document.addEventListener('DOMContentLoaded', function () {
             var id = getQueryParam("id");
             var hatModelSrc;
 
             // idの値に基づいてURLを選択
             if (id === '1') {
-                hatModelSrc = "https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/hat2/scene.gltf"; 
+                hatModelSrc = "https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/hat2/scene.gltf";
             } else if (id === '2') {
-                hatModelSrc = "https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/hat2/scene.gltf"; 
+                hatModelSrc = "https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/hat2/scene.gltf";
             }
 
             // hatModelのsrc属性を更新
             if (hatModelSrc) {
-                document.getElementById('hatModel').setAttribute('src', hatModelSrc);
-            }
+                var hatModel = document.getElementById('hatModel');
+                hatModel.setAttribute('src', hatModelSrc);
 
+                // モデルがロードされたら属性を設定
+                hatModel.addEventListener('model-loaded', () => {
+                    updateModelAttributes(id);
+                });
+            }
+        });
+
+        function updateModelAttributes(id) {
             var gltfModel = document.querySelector('a-gltf-model[mindar-face-target]');
 
             switch (id) {
                 case '1':
                     gltfModel.setAttribute('position', '0 0.5 -0.5');
                     gltfModel.setAttribute('rotation', '90 90 0');
-                    gltfModel.setAttribute('scale', '0.008 1 0.008'); 
+                    gltfModel.setAttribute('scale', '0.008 1 0.008');
                     break;
                 case '2':
-                    gltfModel.setAttribute('position', '0 -0.2 -0.5'); 
+                    gltfModel.setAttribute('position', '0 -0.2 -0.5');
                     gltfModel.setAttribute('rotation', '0 0 0');
-                    gltfModel.setAttribute('scale', '0.008 0.008 0.008'); 
+                    gltfModel.setAttribute('scale', '0.008 0.008 0.008');
                     break;
             }
-        });
+        }
 
         document.getElementById('start').addEventListener('click', function () {
         document.getElementById('modal').style.display = 'none';
