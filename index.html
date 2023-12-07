@@ -185,11 +185,14 @@
 
             // idの値に基づいてURLを選択
             if (id === '1') {
-                hatModelSrc = "https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/hat/scene.gltf";
-                document.getElementById('hatModel').setAttribute('src', hatModelSrc);
+                hatModelSrc = "https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/hat/scene.gltf"; 
             } else if (id === '2') {
-                hatModelSrc = "https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/hat2/scene.gltf";
-                document.getElementById('hatModel2').setAttribute('src', hatModelSrc);
+                hatModelSrc = "https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/face-tracking/assets/hat2/scene.gltf"; 
+            }
+
+            // hatModelのsrc属性を更新
+            if (hatModelSrc) {
+                document.getElementById('hatModel').setAttribute('src', hatModelSrc);
             }
 
             var gltfModel = document.querySelector('a-gltf-model[mindar-face-occluder]');
@@ -203,7 +206,7 @@
                 case '2':
                     gltfModel.setAttribute('position', '0 -0.2 -0.5'); 
                     gltfModel.setAttribute('rotation', '0 0 0');
-                    gltfModel.setAttribute('scale', '0.08 0.08 0.08'); 
+                    gltfModel.setAttribute('scale', '0.008 0.008 0.008'); 
                     break;
             }
         });
