@@ -78,10 +78,10 @@
                 font-family: 'Arial', sans-serif; /* New Font */
                 letter-spacing: 1px;
                 color: white;
-                background-color: #FF4081;
+                background: linear-gradient(45deg, #FF4081, #FF6E40);
                 border: none;
                 border-radius: 30px;
-                padding: 10px 20px;
+                padding: 10px 45px;
                 max-width: 200px;
                 margin: 10px 0;
                 cursor: pointer;
@@ -89,7 +89,29 @@
             }
 
             #modal {
-                padding: 20px; /* Additional Padding */
+                position: fixed;
+                width: 60%; /* サイズを小さくする */
+                height: 60%;
+                background: linear-gradient(135deg, #ffd1dd, #ffcccc); /* グラデーション背景 */
+                z-index: 999;
+                border-radius: 25px;
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+                flex-direction: column;
+                margin: auto;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+
+            .material-icons {
+                font-size: 36px; /* アイコンサイズを大きくする */
+            }
+
+            #modal p {
+                font-size: 1.2em; /* テキストサイズを大きくする */
             }
 
             #start-text {
@@ -128,7 +150,7 @@
                 left: 0;
                 width: 0%;
                 height: 200px;
-                background-color: green;
+                background-color: #FF6E40;
                 display: none; /* 初期状態では非表示 */
                 z-index: 20;
             }
@@ -138,9 +160,20 @@
                 z-index: 20; /* テキストの z-index をスナップショットより高く設定 */
                 display: none;
             }
+
+            #logo {
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 1000;
+                width: 200px;
+                height: auto;
+            }
         </style>
 </head>
 <body>
+    <img id="logo" src="./texture/logo.png" alt="Service Logo" />
     <div id="modal" style="position: fixed; width: 70%; height: 70%; background: #ffd1dd; z-index: 999; border-radius: 25px; display: flex; align-items: center; justify-content: space-evenly; flex-direction: column; margin: auto; left: 0; right: 0; top: 0; bottom: 0;">
         <p><span class="material-icons" style="vertical-align: middle; margin-right: 10px;">warning</span> AR撮影中は周囲に気をつけて、安全な場所で行いましょう。</p>
         <p><span class="material-icons" style="vertical-align: middle; margin-right: 10px;">camera</span> インカメラを使用して、顔にARエフェクトが表示されます。</p>
@@ -149,7 +182,7 @@
         <button id="start">開始</button>
     </div>
     <div id="start-text">
-
+        <div id="tap-to-start" style="position: fixed; width: 100%; bottom: 50px; text-align: center; color: white; font-size: 1.5em; display: none;">画面をタップして撮影開始</div>
     </div>
     <div id="countdown"></div>
     <a-scene screenshot mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
@@ -171,8 +204,7 @@
         <div id="progress-bar" style="position: fixed; bottom: 20px; width: 0%; height: 10px; background-color: green; display: none;"></div>
     </div>
 
-    <script>
-        // クエリパラメータを取得
+    <script>// クエリパラメータを取得
         function getQueryParam(param) {
             var urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
@@ -218,12 +250,6 @@
             }
         }
 
-        document.getElementById('start').addEventListener('click', function () {
-        document.getElementById('modal').style.display = 'none';
-        document.querySelector('a-camera').setAttribute('active', 'true');
-        document.getElementById('start-text').style.display = 'block';
-        startTextDiv.style.display = 'block';
-        });
         var countdownNum = 3;
         var countdownStarted = false;
         var countdownDiv = document.createElement('div');
@@ -246,9 +272,23 @@
         var startTextDiv = document.getElementById('start-text');
         var saveTextDiv = document.getElementById('save-text');
 
-        document.body.addEventListener('click', function () {
-            countdownDiv.style.display = 'none';
+        document.getElementById('start').addEventListener('click', function () {
+            document.getElementById('modal').style.display = 'none';
+            document.querySelector('a-camera').setAttribute('active', 'true');
+            document.getElementById('start-text').style.display = 'block';
+            document.getElementById('tap-to-start').style.display = 'block';
+            startTextDiv.style.display = 'block';
+            countdownStarted = false; // カウントダウン開始フラグをリセット
+        });
+
+        document.body.addEventListener('click', function (event) {
+            // 開始ボタンがタップされた場合は何もしない
+            if (event.target.id === 'start') {
+                return;
+            }
+
             if (!countdownStarted && document.getElementById('start-text').style.display === 'block') {
+                document.getElementById('tap-to-start').style.display = 'none';
                 countdownStarted = true;
                 countdownDiv.textContent = countdownNum;
                 countdownDiv.style.display = 'flex';
@@ -266,6 +306,7 @@
                 }, 1000);
             }
         });
+
 
         document.addEventListener('DOMContentLoaded', function () {
             var sceneEl = document.querySelector('a-scene');
@@ -343,6 +384,6 @@
             }
         }
 
-                //--></script>
+                    //--></script>
 </body>
 </html>
