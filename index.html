@@ -193,7 +193,7 @@
 </head>
 <body>
     <img id="logo" src="./texture/logo.png" alt="Service Logo" />
-    <div id="modal" style="position: fixed; width: 70%; height: 70%; background: #ffd1dd; z-index: 999; border-radius: 25px; display: flex; align-items: center; justify-content: space-evenly; flex-direction: column; margin: auto; left: 0; right: 0; top: 0; bottom: 0;">
+    <div id="modal">
         <p><span class="material-icons" style="vertical-align: middle; margin-right: 10px;">warning</span> AR撮影中は周囲に気をつけて、安全な場所で行いましょう。</p>
         <p><span class="material-icons" style="vertical-align: middle; margin-right: 10px;">camera</span> インカメラを使用して、顔にARエフェクトが表示されます。</p>
         <p><span class="material-icons" style="vertical-align: middle; margin-right: 10px;">lock</span> カメラのデータは保存されません。</p>
@@ -201,7 +201,7 @@
         <button id="start">開始</button>
     </div>
     <div id="start-text">
-        <div id="tap-to-start" style="position: fixed; width: 100%; bottom: 50px; text-align: center; color: white; font-size: 1.5em; display: none;">画面をタップして撮影開始</div>
+        <div id="tap-to-start" style="position: fixed; width: 100%; bottom: 50px; text-align: center; color: white; font-size: 1em; display: none;">画面をタップして撮影開始</div>
     </div>
     <div id="countdown"></div>
     <a-scene screenshot mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
@@ -219,8 +219,8 @@
     </a-scene>
     <div class="ui">
         <img id="snap">
-        <div id="save-text" style="position: fixed; bottom: 50px; width: 100%; text-align: center; color: white; font-size: 1.5em;">スクリーンショットで保存</div>
-        <div id="progress-bar" style="position: fixed; bottom: 20px; width: 0%; height: 10px; background-color: green; display: none;"></div>
+        <div id="save-text" style="position: fixed; bottom: 50px; width: 100%; text-align: center; color: white; font-size: 1em;">スクリーンショットで保存</div>
+        <div id="progress-bar" style="position: fixed; bottom: 5px; width: 0%; height: 10px; display: none;"></div>
     </div>
 
     <script>// クエリパラメータを取得
