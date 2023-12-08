@@ -93,6 +93,7 @@
                 width: 60%; /* サイズを小さくする */
                 max-width: 400px; /* 最大幅を設定 */
                 height: auto; /* 高さを自動調整 */
+                max-height: 600px;
                 background: linear-gradient(135deg, #ffd1dd, #ffcccc); /* グラデーション背景 */
                 padding: 20px; /* 内側の余白を追加 */
                 box-sizing: border-box; /* パディングを含めたサイズ計算 */
@@ -110,7 +111,7 @@
             }
 
             .material-icons {
-                font-size: 36px; /* アイコンサイズを大きくする */
+                font-size: 48px; /* アイコンサイズを大きくする */
             }
 
             #modal p {
@@ -186,7 +187,7 @@
                 }
 
                 #modal p {
-                    font-size: 1em; /* スマホではテキストサイズを小さくする */
+                    font-size: 1.2em; /* スマホではテキストサイズを小さくする */
                 }
             }
         </style>
@@ -201,7 +202,7 @@
         <button id="start">開始</button>
     </div>
     <div id="start-text">
-        <div id="tap-to-start" style="position: fixed; width: 100%; bottom: 50px; text-align: center; color: white; font-size: 1em; display: none;">画面をタップして撮影開始</div>
+        <div id="tap-to-start" style="position: fixed; width: 100%; bottom: 50px; text-align: center; color: white; font-size: 1.2em; display: none;">画面をタップして撮影開始</div>
     </div>
     <div id="countdown"></div>
     <a-scene screenshot mindar-face embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
@@ -219,7 +220,7 @@
     </a-scene>
     <div class="ui">
         <img id="snap">
-        <div id="save-text" style="position: fixed; bottom: 50px; width: 100%; text-align: center; color: white; font-size: 1em;">スクリーンショットで保存</div>
+        <div id="save-text" style="position: fixed; bottom: 50px; width: 100%; text-align: center; color: white; font-size: 1.2em;">スクリーンショットで保存</div>
         <div id="progress-bar" style="position: fixed; bottom: 5px; width: 0%; height: 10px; display: none;"></div>
     </div>
 
