@@ -194,15 +194,15 @@
                 var hatModel = document.getElementById('hatModel');
                 hatModel.setAttribute('src', hatModelSrc);
 
-                // モデルがロードされたら属性を設定
-                hatModel.addEventListener('model-loaded', () => {
+                var hatModelEntity = document.querySelector('a-gltf-model[src="#hatModel"]');
+                hatModelEntity.addEventListener('model-loaded', () => {
                     updateModelAttributes(id);
                 });
             }
         });
 
         function updateModelAttributes(id) {
-            var gltfModel = document.querySelector('a-gltf-model[mindar-face-target]');
+            var gltfModel = document.querySelector('a-gltf-model[src="#hatModel"]');
 
             switch (id) {
                 case '1':
